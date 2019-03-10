@@ -1,0 +1,89 @@
+<mat-sidenav-container class="main-sidenav-container" (keydown.esc)="close('escape')" [ngClass]="defaultTheme">
+  <mat-sidenav-content class="main-sidenav-content">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row class="topnav-toolbar" fxLayout="row" fxLayoutGap="20px">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <span>Product Manager</span>
+        </div>
+        <div class="spacer"></div>
+        <label (click)="logout()" style="float:right;">
+          <mat-icon class="btn-logout">exit_to_app</mat-icon>Logout
+        </label>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <br />
+    <div class="main-content">
+      <div fxLayout="row" fxLayoutGap="20px">
+        <div style="width:30%">
+
+          <mat-card>
+            <mat-card-title style="background:green; padding:10px">
+              Products
+            </mat-card-title>
+            <mat-card-content>
+              <mat-card [ngClass]="{'selectd-product': p._id == selectedProduct?._id}" (click)="currentProduct(p)" style="padding-top:0px; padding-bottom:0px;" fxLayout="column" *ngFor="let p of products">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <p>{{p.name}}</p>
+                  <p>${{p.price}}</p>
+                </div>
+              </mat-card>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div style="width:70%;">
+          <mat-card style="background:green; padding:10px">
+            <p style="text-align:center;">Product Count: {{products.length}}</p>
+          </mat-card>
+
+          <mat-card>
+            <div fxLayout="row" fxLayoutAlign="space-between" style="background:green;">
+              <p style="margin-left:10px">Product Details</p>
+              <p style="margin-right:10px" *ngIf="selectedProduct?._id">{{selectedProduct?.name}}(Product id: {{selectedProduct?._id}})</p>
+            </div>
+            <mat-card-content>
+              <form [formGroup]="productForm" class="example-form" fxLayout="column"
+                fxLayoutAlign="center center">
+                <div class="error-message" *ngIf="error">{{error}}</div>
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="name" placeholder="Name" name="name" required>
+                  <mat-error *ngIf="productForm.controls.name.errors?.required &&
+              !productForm.controls.name.untouched">Product name required</mat-error>
+                  <mat-error class="text-danger" translate *ngIf="(productForm.controls.name.errors?.minlength ||
+                  productForm.controls.name.errors?.maxlength) &&
+                      !productForm.controls.name.errors.untouched &&
+                      !productForm.controls.name.errors?.required">
+                    Product name should be between 3 to 32 char
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="price" placeholder="Price" type="number" name="password"
+                    required>
+                  <mat-error *ngIf="productForm.controls.price.errors?.required &&
+              !productForm.controls.price.untouched">price required</mat-error>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="rating" placeholder="Rating" type="number" name="password"
+                    required>
+                  <mat-error *ngIf="productForm.controls.rating.errors?.required &&
+              !productForm.controls.rating.untouched">Rating required</mat-error>
+                </mat-form-field>
+                <mat-spinner [style.display]="loading ? 'block' : 'none'"></mat-spinner>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <button (click)="addProduct()" mat-button type="button" class="mat-raised-button mat-primary"
+                    [disabled]="productForm.invalid || loading || selectedProduct?._id">Add</button>
+                  <button (click)="saveProduct()" mat-button type="button" class="mat-raised-button mat-primary"
+                  [disabled]="productForm.invalid || loading || !selectedProduct?._id">Save</button>
+                  <button (click)="deleteProduct()" mat-button type="button" class="mat-raised-button mat-warn"
+                  [disabled]="loading || !selectedProduct?._id">Delete</button>
+                  <button mat-button type="button" class="mat-raised-button" color="accent"
+                  [disabled]="loading" (click)="resetSelectedProduct()">Cancel</button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>>
+</mat-sidenav-container>
